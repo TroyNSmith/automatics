@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
+
+## [0.0.5] - 2026-06-17
 ### Added
 - `utils.constants` to provide a single source of truth on numerical constants (e.g. unit conversions).
 - `model.hash` to facilitate `autostorage ModelRow` uniqueness and querying.
