@@ -220,7 +220,7 @@ def shell_capacity(key: int | str) -> int:
     return PERIOD_SHELL_CAPACITY[period(key)]
 
 
-def nvalence(key: int | str, *, override: dict[str, int] | None = None) -> int:
+def valence(key: int | str, *, override: dict[str, int] | None = None) -> int:
     """
     Retrieve number of valence electrons by atomic number or symbol.
 
@@ -262,5 +262,5 @@ def bonding_capacity(key: int | str, *, override: dict[str, int] | None = None) 
         if symb in override:
             return override[symb]
     cap = shell_capacity(key)
-    nval = nvalence(key)
+    nval = valence(key)
     return min(nval, cap - nval)

@@ -25,9 +25,6 @@ _QC_AVAILABLE = _QC_SPEC is not None
 if _QC_AVAILABLE or TYPE_CHECKING:
     from qcdata import Structure
 
-RADIANS_TO_DEGREES = pint.Quantity("radian").m_as("degree")
-DEGREES_TO_RADIANS = 1 / RADIANS_TO_DEGREES
-
 
 class Geometry(BaseModel):
     """
@@ -68,6 +65,11 @@ class Geometry(BaseModel):
     hash: str | None = Field(default=None)
 
     @property
+    def atom_count(self) -> int:
+        """Get number of atoms."""
+        return len(self.symbols)
+
+    @property
     def masses(self) -> list[float]:
         """Get isotopic masses."""
         return list(map(element.mass, self.symbols))
@@ -83,24 +85,24 @@ class Geometry(BaseModel):
         return list(map(element.covalent_radius, self.symbols))
 
     @property
-    def nvalences(self) -> list[int]:
+    def valences(self) -> list[int]:
         """Get numbers of valence electrons."""
-        return list(map(element.nvalence, self.symbols))
+        return list(map(element.valence, self.symbols))
 
     @model_validator(mode="after")
     def populate_hash(self) -> "Geometry":
-        """Populate hash immediately after the model is created."""
+        """Populate hash after model is validated."""
         # Only populate if hash wasn't explicitly provided
         if self.hash is None:
             with contextlib.suppress(HashGenerationError):
                 self.hash = geometry_hash(self, decimals=6)
+                self.model_fields_set.add("hash")
         return self
 
 
 # Properties
 def geometry_hash(geo: Geometry, decimals: int = 6) -> str:
-    """
-    Generate geometry hash string.
+    """Generate a deterministic geometry hash string.
 
     Parameters
     ----------
@@ -190,7 +192,9 @@ def rdkit_mol(geo: Geometry) -> Mol:
 
     raw_mol = Chem.MolFromXYZBlock(xyz_block(geo))
     conn_mol = Chem.Mol(raw_mol)
-    rdDetermineBonds.DetermineBonds(conn_mol, charge=-geo.spin)
+    rdDetermineBonds.DetermineBonds(
+        conn_mol, useHueckel=True, charge=-geo.spin, allowChargedFragments=False
+    )
 
     for a in conn_mol.GetAtoms():
         charge = a.GetFormalCharge()

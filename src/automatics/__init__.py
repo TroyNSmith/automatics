@@ -2,10 +2,10 @@
 
 __version__ = "0.0.4"
 
-from . import element, geom, rd
-from .calc import Model
-from .geom import Geometry
-from .ident import Identity
+from . import element, geometry, rd, utils
+from .geometry import Geometry
+from .identity import Identity
+from .model import Model
 from .view import View
 
 __all__ = [
@@ -14,6 +14,7 @@ __all__ = [
     "Model",
     "View",
     "element",
-    "geom",
+    "geometry",
     "rd",
+    "utils",
 ]

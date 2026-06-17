@@ -62,11 +62,11 @@ root_package = "automatics"
 name = "Module Layering"
 type = "layers"
 layers = [
-    "automatics.ident | automatics.view",
-    "automatics.calc | automatics.geom",
+    "automatics.identity | automatics.view",
+    "automatics.model | automatics.geometry",
     "automatics.rd",
-    "automatics.element",
     "automatics.utils",
+    "automatics.element",
 ]
 
 # Pytest configurations
