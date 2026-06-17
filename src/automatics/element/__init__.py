@@ -9,10 +9,10 @@ from .core import (
     mass,
     mass_number,
     number,
-    nvalence,
     period,
     shell_capacity,
     symbol,
+    valence,
 )
 
 __all__ = [
@@ -24,8 +24,8 @@ __all__ = [
     "mass",
     "mass_number",
     "number",
-    "nvalence",
     "period",
     "shell_capacity",
     "symbol",
+    "valence",
 ]

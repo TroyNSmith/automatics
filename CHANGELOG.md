@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
+### Added
+- `utils.constants` to provide a single source of truth on numerical constants (e.g. unit conversions).
+- `model.hash` to facilitate autostorage querying.
+
+### Fixed
+
+### Changed
+- `pyproject.toml` layering configuration to allow `utils` to import from `elements` if necessary.
+- `geom.py` -> `geometry.py` to avoid namespace conflicts in `automol` package.
+- `ident.py` -> `identity.py` to match `geometry` rename.
+- `calc.py` -> `model.py` to match refactor from `0.0.4`.
+- `nvalence` -> `valence` in `elements.core` to reflect variable naming philosophy.
+
+### Deleted
 
 ## [0.0.4] - 2026-06-11
 ### Added

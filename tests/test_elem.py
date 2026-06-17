@@ -54,7 +54,7 @@ def test__nvalence(
     key: str | int, override: dict[str, int] | None, nvalence: int
 ) -> None:
     """Test retrieval of element nvalence."""
-    assert element.nvalence(key, override=override) == nvalence
+    assert element.valence(key, override=override) == nvalence
 
 
 @pytest.mark.parametrize(
