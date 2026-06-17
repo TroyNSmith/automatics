@@ -6,9 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 ### Added
 - `utils.constants` to provide a single source of truth on numerical constants (e.g. unit conversions).
-- `model.hash` to facilitate autostorage querying.
+- `model.hash` to facilitate `autostorage ModelRow` uniqueness and querying.
+- `Geometry.atom_count` for convenience.
 
 ### Fixed
+- `rdDetermineBonds.DetermineBonds(..., useHueckel=True, allowChargedFragments=False)` to temporarily resolve (#5)
 
 ### Changed
 - `pyproject.toml` layering configuration to allow `utils` to import from `elements` if necessary.
@@ -16,8 +18,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `ident.py` -> `identity.py` to match `geometry` rename.
 - `calc.py` -> `model.py` to match refactor from `0.0.4`.
 - `nvalence` -> `valence` in `elements.core` to reflect variable naming philosophy.
-
-### Deleted
 
 ## [0.0.4] - 2026-06-11
 ### Added
