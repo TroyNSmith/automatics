@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
+### Added
+- `render_svg` and `render_gif` for rendering `Geometry` instances.
+- `qcdata` and `xyzrender` as developer / optional dependencies.
+- `WAVENUMBER_TO_HARTREE` constant.
+- `from_xyz_file` and `from_xyz_block` `classmthods` on `Geometry` for importing standard xyz formats.
+- `xyz_file` and `xyz_block` on `Geometry` for exporting standard xyz formats.
+
+### Fixed
+- `to_qc_structure` typo -> `from_qc_structure`.
+
+### Changed
+- `geometry.py` reverted to `geom.py` (higher-level packages updated to re-export namespace clashes).
+- `AU_TO_INV_CM` constant -> `VIBRATIONAL_FORCE_TO_INV_CM_FREQUENCY` for clarity.
 
 ## [0.0.5] - 2026-06-17
 ### Added
