@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
+
+## [0.0.6] - 2026-06-18
 ### Added
 - `render_svg` and `render_gif` for rendering `Geometry` instances.
 - `qcdata` and `xyzrender` as developer / optional dependencies.

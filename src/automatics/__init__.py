@@ -1,6 +1,6 @@
 """automatics."""
 
-__version__ = "0.0.5"
+__version__ = "0.0.6"
 
 from . import element, geom, rd, utils
 from .geom import Geometry
