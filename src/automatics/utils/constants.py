@@ -33,6 +33,7 @@ JOULE: pint.Quantity = 1 * ureg.joule
 
 # Physical
 C: pint.Quantity = 1 * ureg.speed_of_light
+WAVENUMBER: pint.Quantity = 1 / CENTIMETER
 
 # Conversions
 ## Angular
@@ -49,19 +50,17 @@ METERS_TO_BOHR: float = METER.m_as(BOHR)
 BOHR_TO_ANGSTROM: float = BOHR.m_as(ANGSTROM)
 ANGSTROM_TO_BOHR: float = ANGSTROM.m_as(BOHR)
 
-## Time
-
-## Velocity
-
 ## Energy
 HARTREE_TO_JOULES: float = HARTREE.m_as(JOULE)
 JOULES_TO_HARTREE: float = JOULE.m_as(HARTREE)
+with ureg.context("spectroscopy"):
+    WAVENUMBER_TO_HARTREE: float = WAVENUMBER.m_as(HARTREE)
 
 ## Physical
 C_METERS_PER_SECOND: float = C.m_as(METERS_PER_SECOND)
 C_CENTIMETERS_PER_SECOND: float = C.m_as(CENTIMETERS_PER_SECOND)
 
 ## Frequency
-AU_TO_INV_CM: float = np.sqrt(
+VIBRATIONAL_FORCE_TO_INV_CM_FREQUENCY: float = np.sqrt(
     HARTREE_TO_JOULES / (DALTON_TO_KILOGRAMS * BOHR_TO_METERS * BOHR_TO_METERS)
 ) / (C_CENTIMETERS_PER_SECOND * 2 * np.pi)

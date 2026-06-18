@@ -4,12 +4,13 @@ import contextlib
 import hashlib
 from importlib.util import find_spec
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Self
 
 import numpy as np
 import pint
 import py3Dmol
 import pyparsing as pp
+import xyzrender
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from pyparsing import pyparsing_common as ppc
 from rdkit import Chem
@@ -89,8 +90,32 @@ class Geometry(BaseModel):
         """Get numbers of valence electrons."""
         return list(map(element.valence, self.symbols))
 
+    def xyz_block(self) -> str:
+        """Return Geometry as a formatted xyz block."""
+        return xyz_block(self)
+
+    @classmethod
+    def from_xyz_block(
+        cls, xyz_block: str, *, charge: int | None = None, spin: int | None = None
+    ) -> Self:
+        """Instantiate Geometry from a formatted xyz block."""
+        return cls.model_validate(from_xyz_block(xyz_block, charge=charge, spin=spin))
+
+    def xyz_file(self, path: str | Path) -> None:
+        """Write Geometry to a formatted xyz file."""
+        path = Path(path)
+        path.write_text(self.xyz_block())
+
+    @classmethod
+    def from_xyz_file(
+        cls, path: str | Path, *, charge: int | None = None, spin: int | None = None
+    ) -> Self:
+        """Instantiate Geometry from a formatted xyz file."""
+        path = Path(path)
+        return cls.from_xyz_block(path.read_text(), charge=charge, spin=spin)
+
     @model_validator(mode="after")
-    def populate_hash(self) -> "Geometry":
+    def populate_hash(self) -> Self:
         """Populate hash after model is validated."""
         # Only populate if hash wasn't explicitly provided
         if self.hash is None:
@@ -166,6 +191,83 @@ def view(
                 {"index": key},
             )
     return view
+
+
+def render_svg(
+    geo: Geometry,
+    *,
+    out: str | Path | None = None,
+    config: str | xyzrender.RenderConfig = "default",
+    include_h: bool = True,
+) -> xyzrender.SVGResult:
+    """Render geometry in .svg format.
+
+    Results display inlay automatically.
+
+    Parameters
+    ----------
+    geo
+        Geometry.
+    out
+        Output path for rendered image.
+    config
+        xyzrender RenderConfig settings.
+    include_h
+        If True, include hydrogen atoms in render.
+
+    Returns
+    -------
+    SVGResult
+    """
+    out = Path(out).with_suffix(".svg") if out else out
+
+    tmp_file = Path.cwd() / ".tmp.xyz"
+    geo.xyz_file(tmp_file)
+    mol = xyzrender.load(tmp_file)
+
+    tmp_file.unlink()
+    return xyzrender.render(mol, config=config, hy=include_h, output=out)
+
+
+def render_gif(
+    geo: Geometry,
+    *,
+    out: str | Path | None = None,
+    config: str | xyzrender.RenderConfig = "default",
+    include_h: bool = True,
+    rotation_axis: str = "x",
+) -> xyzrender.GIFResult:
+    """Render geometry rotating about an axis in .gif format.
+
+    Results display inlay automatically.
+
+    Parameters
+    ----------
+    geo
+        Geometry.
+    out
+        Output path for rendered gif.
+    config
+        xyzrender RenderConfig settings.
+    include_h
+        If True, include hydrogen atoms in render.
+    rotation_axis
+        Axis to rotate about in animation.
+
+    Returns
+    -------
+    GIFResult
+    """
+    out = Path(out).with_suffix(".gif") if out else out
+
+    tmp_file = Path.cwd() / ".tmp.xyz"
+    geo.xyz_file(tmp_file)
+    mol = xyzrender.load(tmp_file)
+
+    tmp_file.unlink()
+    return xyzrender.render_gif(
+        mol, config=config, hy=include_h, output=out, gif_rot=rotation_axis
+    )
 
 
 def rdkit_mol(geo: Geometry) -> Mol:
@@ -345,7 +447,7 @@ def qc_structure(geo: Geometry) -> Structure:
     )
 
 
-def to_qc_structure(struc: Structure) -> Geometry:
+def from_qc_structure(struc: Structure) -> Geometry:
     """Instantiate Geometry from qc Structure."""
     if not _QC_AVAILABLE:
         msg = "qcdata module is not available for Structure conversion."

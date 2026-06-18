@@ -4,13 +4,10 @@ from collections.abc import Sequence
 
 import numpy as np
 import py3Dmol
-import pytest
 from numpy.typing import ArrayLike
 
-from . import geometry
-from .geometry import Geometry
-
-pytestmark = pytest.mark.skip(reason="Viewer cannot be tested autonomously.")
+from . import geom
+from .geom import Geometry
 
 
 class View(py3Dmol.view):
@@ -24,7 +21,7 @@ class View(py3Dmol.view):
         geo
             Geometry.
         """
-        geometry.view(geo, view=self, label=label)
+        geom.view(geo, view=self, label=label)
 
     def add_xyz_axes(
         self,

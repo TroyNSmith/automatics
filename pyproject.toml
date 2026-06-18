@@ -63,7 +63,7 @@ name = "Module Layering"
 type = "layers"
 layers = [
     "automatics.identity | automatics.view",
-    "automatics.model | automatics.geometry",
+    "automatics.model | automatics.geom",
     "automatics.rd",
     "automatics.utils",
     "automatics.element",
