@@ -9,12 +9,12 @@ from typing import TYPE_CHECKING, Any, ClassVar, Self
 from pydantic import BaseModel, model_validator
 from rdkit import Chem
 
-from . import geometry
+from . import geom
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from .geometry import Geometry
+    from .geom import Geometry
 
 
 @dataclass
@@ -159,7 +159,7 @@ class RDKitInChI(AlgorithmFns):
     @staticmethod
     def identity_fn(geo: Geometry) -> str:
         """Generate InChI from Geometry with RDKit."""
-        mol = geometry.rdkit_mol(geo)
+        mol = geom.rdkit_mol(geo)
         mol_block = Chem.rdmolfiles.MolToMolBlock(mol)
         return Chem.inchi.MolBlockToInchi(mol_block)
 
@@ -168,7 +168,7 @@ class RDKitInChI(AlgorithmFns):
         """Generate Geometry from InChI with RDKit."""
         mol = Chem.MolFromInchi(value, sanitize=True, removeHs=False)
         mol = Chem.AddHs(mol)
-        return geometry.from_rdkit_mol(mol)
+        return geom.from_rdkit_mol(mol)
 
 
 @AlgorithmRegistry.register(name="rdkit smiles", kind="stereoisomer")
@@ -178,7 +178,7 @@ class RDKitSMILES(AlgorithmFns):
     @staticmethod
     def identity_fn(geo: Geometry) -> str:
         """Generate SMILES from Geometry with RDKit."""
-        mol = geometry.rdkit_mol(geo)
+        mol = geom.rdkit_mol(geo)
         return Chem.MolToSmiles(Chem.RemoveAllHs(mol))
 
     @staticmethod
@@ -186,4 +186,4 @@ class RDKitSMILES(AlgorithmFns):
         """Generate Geometry from SMILES with RDKit."""
         mol = Chem.MolFromSmiles(value)
         mol = Chem.AddHs(mol)
-        return geometry.from_rdkit_mol(mol)
+        return geom.from_rdkit_mol(mol)
